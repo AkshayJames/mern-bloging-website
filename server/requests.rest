@@ -1,0 +1,9 @@
+# POST http://localhost:3000/signin
+# Content-Type: application/json
+
+# {
+#     "email": "admi2@gmail.com",
+#     "password": "Admin@gmailcom"
+# }
+
+GET http://localhost:3000/get-upload-url
