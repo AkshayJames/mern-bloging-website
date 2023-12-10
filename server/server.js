@@ -59,6 +59,29 @@ const generateUploadURL = async() =>{
 }
 
 
+const verifyJWT = ( req, res, next) => {
+
+    const authHeader = req.headers['authorization'];
+    const token = authHeader && authHeader.split(" ")[1];
+
+    if (token == null){
+        return res.status(401).json({ error: "no access token"})
+    }
+
+    jwt.verify(token , process.env.SECRET_ACCESS_KEY , (err, user) => {
+
+       if(err){
+        return res.status(403).json({ error : "Access token is not valid"})
+       } 
+
+       req.user = user.id
+
+       next()
+
+    })
+
+}
+
 const formatDatatoSend = (user) => {
 
     const access_token = jwt.sign({id: user._id},process.env.SECRET_ACCESS_KEY)
@@ -263,9 +286,44 @@ server.post("/google-auth", async (req, res) => {
         return res.status(500).json({"error" : "Failed to authenticate you with google. Try with some other google account"})
 
     });
-
-
 })
+
+server.post('/create-blog', verifyJWT , (req, res) => {
+
+    let authorId = req.user;
+
+    let { title ,des , banner, tags , content, draft} = req.body;
+    
+    if(!title.length){
+        return res.status(403).json({"error" : "You must provide a title to publish the blog"});
+    }
+
+    if(!des.length || des.length > 200){
+        return res.status(403).json({"error" : "You must provide a description to publish the blog"});
+
+    }
+
+    if(!banner.length){
+        return res.status(403).json({"error" : "You must provide a blog banner to publish the blog"});
+
+    }
+
+    if(!content.block.length ){
+
+        return res.status(403).json({"error" : "There must be at least one content to publish the blog"});
+    }
+
+    if(!tags.length || tags.length > 10 ) {
+
+        return res.status(403).json({"error": "You must provide a tags to publish the blog , Maximum 10 tags"});
+    }
+
+    tags = tags.map( tag => tag.toLowerCase());
+
+    
+
+
+    })
 
 
 server.listen(PORT,()=>{

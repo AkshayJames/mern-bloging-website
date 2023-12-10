@@ -1,3 +1,5 @@
+#  access_token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY1NzYwMjY4NmJlYjUzNTExNjIwNGM0OSIsImlhdCI6MTcwMjIzMjY4MH0.9BerD2xwYLXW_UJuVq9DL-01pJ26KnxKDN3p5SzrcjI
+
 # POST http://localhost:3000/signin
 # Content-Type: application/json
 
@@ -6,4 +8,34 @@
 #     "password": "Admin@gmailcom"
 # }
 
-GET http://localhost:3000/get-upload-url
+# GET http://localhost:3000/get-upload-url
+
+
+
+# POST  http://localhost:3000/create-blog
+# Content-Type: application/json
+
+
+# {
+#     "blog-name": "This is a new blog test"
+
+# }
+
+
+# POST  http://localhost:3000/signup 
+# Content-Type: application/json
+
+
+# {
+#     "fullname" : "john",
+#     "email" : "admin1@gmail.com",
+#     "password" : "Admin@12gmail.com"
+# }
+
+POST http://localhost:3000/create-blog
+Content-Type:application/json
+authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY1NzYwMjY4NmJlYjUzNTExNjIwNGM0OSIsImlhdCI6MTcwMjIzMjY4MH0.9BerD2xwYLXW_UJuVq9DL-01pJ26KnxKDN3p5SzrcjI
+
+{
+    "title" : "test title"
+}
