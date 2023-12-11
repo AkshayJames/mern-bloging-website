@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate} from "react-router-dom";
 import  logo from "../imgs/logo.png"
 import  defaultBanner from "../imgs/blog banner.png"
 import AnimationWrapper from "../common/page-animation";
@@ -8,23 +8,31 @@ import { Toaster,toast } from "react-hot-toast";
 import { EditorContext } from "../pages/editor.pages";
 import EditorJS from "@editorjs/editorjs";
 import { tools } from "./tools.component";
+import axios from "axios";
+import { UserContext } from "../App";
 
 const BlogEditor = ()=> {
 
 
     let { blog , blog : {title, banner, content, tags,des}, setBlog,setEditorState ,textEditor,setTextEditor }= useContext(EditorContext)
 
+    let { userAuth : { access_token }} = useContext(UserContext)
+
+    let navigate = useNavigate()
+
     //useEffect
 
     useEffect(() => {
-      
+
+        if(!textEditor.isReady){
+
         setTextEditor(new EditorJS({
             holderId : "textEditor",
             data : content,
             tools: tools,
             placeholder: "Lets write something intresting!!...",
         }))
-      
+      }
     }, [])
     
 
@@ -82,31 +90,90 @@ const BlogEditor = ()=> {
 
     const handlePublishEvent = ()=>{
 
-        // if(!banner.length){
-        //     return toast.error("Upload a blog banner to publish it")
-        //     }
+        if(!banner.length){
+            return toast.error("Upload a blog banner to publish it")
+            }
 
-        // if(!title.length){
-        //         return toast.error("Write some title to publish the blog")
-        //     }
+        if(!title.length){
+                return toast.error("Write some title to publish the blog")
+            }
 
-        // if(textEditor.isReady){
+        if(textEditor.isReady){
             
             textEditor.save().then( data => {              
-                // if(data.blocks.length){
+                if(data.blocks.length){
                     setBlog ({...blog, content : data })
                     setEditorState ("publish")
-        //         }else {
-        //             return toast.error("write some content in your blog to publish ");
-        //          }
+                }else {
+                    return toast.error("write some content in your blog to publish ");
+                 }
             })
             .catch((err) =>{
                 console.log(err);
             })
-        //  }
+         }
 
     }
 
+    const handleSaveDraft = (e)=>{
+
+        
+        if(e.target.className.includes("disable")){
+
+            return;
+
+        }
+
+        if(!title.length){
+            return toast.error("Write blog title before saving it as draft")
+        }
+
+
+        let loadingToast = toast.loading("Saving Draft...");
+
+        e.target.classList.add('disable');
+
+        if(textEditor.isReady){
+
+            textEditor.save().then( content => {
+
+                let blogObj = {
+
+                    title, des, tags, content, banner, draft :true
+        
+                }
+                axios.post(import.meta.env.VITE_SERVER_DOMAIN + "/create-blog", blogObj, {
+                    headers : {
+                        'Authorization': `Bearer ${ access_token }`
+                    }
+                })
+        
+                .then( () => {
+        
+                    e.target.classList.remove('disable');
+        
+                    toast.dismiss(loadingToast);
+        
+                    toast.success("Saved");
+        
+                    setTimeout(() => {
+                        
+                        navigate('/')
+        
+                    }, 500);
+                })
+                .catch( ( {response} ) => {
+        
+                    e.target.classList.remove('disable');
+                    toast.dismiss(loadingToast);
+        
+                    return toast.error(response.data.error);
+        
+                })
+            });
+        }      
+
+    }
 
 
 
@@ -130,7 +197,11 @@ const BlogEditor = ()=> {
              publish
         </button>
 
-        <button className="btn-light py-2 ">
+        <button className="btn-light py-2 "
+
+        onClick={handleSaveDraft}
+        
+        >
            Save Draft
         </button>
         </div>
