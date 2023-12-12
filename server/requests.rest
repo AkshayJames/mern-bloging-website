@@ -33,16 +33,20 @@
 # }
 
 
-POST http://localhost:3000/create-blog
-Content-Type:application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY1NzYwMjY4NmJlYjUzNTExNjIwNGM0OSIsImlhdCI6MTcwMjIzMjY4MH0.9BerD2xwYLXW_UJuVq9DL-01pJ26KnxKDN3p5SzrcjI
+# POST http://localhost:3000/create-blog
+# Content-Type:application/json
+# Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY1NzYwMjY4NmJlYjUzNTExNjIwNGM0OSIsImlhdCI6MTcwMjIzMjY4MH0.9BerD2xwYLXW_UJuVq9DL-01pJ26KnxKDN3p5SzrcjI
 
-{
-    "title" : "test title",
-    "des" : "this is a des",
-    "banner" : "https://example.com/image-url",    
-    "content": {
-        "blocks" : [ 1,2 ]
-    },
-    "tags" : ["tag1", "tag2"]
-}
+# {
+#     "title" : "test title",
+#     "des" : "this is a des",
+#     "banner" : "https://example.com/image-url",    
+#     "content": {
+#         "blocks" : [ 1,2 ]
+#     },
+#     "tags" : ["tag1", "tag2"]
+# }
+
+
+GET http://localhost:3000/latest-blogs
+
