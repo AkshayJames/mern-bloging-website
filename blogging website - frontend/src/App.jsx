@@ -33,7 +33,7 @@ const App = () => {
                   <Route index element= {<HomePage />} />
                   <Route path="/signin" element={<UserAuthForm type="sign-in"/>} />
                   <Route path="/signup" element={<UserAuthForm type="sign-up"/>}  />
-                  <Route path= "search/:query" element= { <SearchPage/> } />
+                  <Route path="search/:query" element={ <SearchPage/> } />
                 </Route>        
              </Routes>
         </UserContext.Provider>

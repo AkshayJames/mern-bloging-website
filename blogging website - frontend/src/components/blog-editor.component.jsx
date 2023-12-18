@@ -14,7 +14,7 @@ import { UserContext } from "../App";
 const BlogEditor = ()=> {
 
 
-    let { blog , blog : {title, banner, content, tags,des}, setBlog,setEditorState ,textEditor,setTextEditor }= useContext(EditorContext)
+    let { blog , blog : {title, banner, content, tags, des}, setBlog,setEditorState ,textEditor,setTextEditor }= useContext(EditorContext)
 
     let { userAuth : { access_token }} = useContext(UserContext)
 

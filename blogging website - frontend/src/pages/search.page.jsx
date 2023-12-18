@@ -11,30 +11,24 @@ import { filterPaginationData } from "../common/filter-pagination-data";
 
 const SearchPage = () => {
 
-    let { query} = useParams()
+    let { query } = useParams()
 
-    let [blogs,setBlog] =useState(null);
+    let [ blogs, setBlog ] =useState(null);
 
-    const searchBlogs = ({ page = 1, create_new_arr= false })=> {
+    const searchBlogs = ({ page = 1, create_new_arr= false }) => {
 
-        axios.post(import.meta.env.VITE_SERVER_DOMAIN + "/search-blogs", { query, page })
-        .then( async( { data } ) => {
+        axios.post(import.meta.env.VITE_SERVER_DOMAIN + "/search-blogs",{ query, page })
+        .then( async ( { data } ) => {
 
-            console.log( data.blogs );
-            
             let formatedData = await filterPaginationData( {
 
                 state: blogs,
                 data: data.blogs,
                 page,
                 countRoute: "/search-blogs-count",
-                data_to_send: {query},
+                data_to_send: { query },
                 create_new_arr
-
-
-            } )
-
-            console.log( formatedData);
+            })
 
             setBlog(formatedData);
 
@@ -49,7 +43,7 @@ const SearchPage = () => {
     useEffect(() => {
 
         resetState();
-        searchBlogs( { page: 1, create_new_arr:true } );
+        searchBlogs( { page : 1, create_new_arr: true } );
 
 
     },[query])
@@ -64,12 +58,12 @@ const SearchPage = () => {
         <section className="h-cover flex justify-center gap-10">
 
             <div className="w-full">
-                <InPageNavigation routes= {[ `Search Results from "${query}"`, "Accounts Matched"  ]} defaultHidden={["Accounts Matched"]}>
+                <InPageNavigation routes= {[ `Search Results from "${query}"`, "Accounts Matched"]}
+                 defaultHidden={["Accounts Matched"]}>
                     <>
-                            {
-                                blogs == null ? (
-    
-                                   <Loader/>
+                            {blogs == null ? (
+
+                                    <Loader/>
     
                                 ) : (   
     
@@ -78,7 +72,7 @@ const SearchPage = () => {
                                 blogs.results.map( (blog , i) => {
                                     return ( <AnimationWrapper
                                             
-                                            transition={ { duration:1 , delay : i*.1 } } key = {i} >
+                                            transition={ { duration:1 , delay: i*0.1 } } key = {i} >
     
                                             <BlogPostCard content = {blog} author = {blog.author.personal_info} />
     
@@ -90,9 +84,9 @@ const SearchPage = () => {
                                 : <NoDataMessage message = "no blogs" />
                             )}
     
-                            {/* <LoadMoreDataBtn  state={blogs} fetchDataFun={ ( pageState == "home" ? fetchLatestBlogs : fetchBlogByCategory) }/> */}
+                            <LoadMoreDataBtn  state={blogs} fetchDataFun={searchBlogs} />
     
-                            </>  
+                        </>  
                 </InPageNavigation>
             </div>
 

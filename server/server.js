@@ -361,11 +361,11 @@ server.post('/search-blogs', (req, res) => {
     
     if(tag){
 
-         findQuery = { tags : tag, draft : false};
-    }
-    else if(query){
+         findQuery = { tags: tag, draft: false };
 
-        findQuery = { draft : false, title : new RegExp(query, "i") };
+    }else if(query){
+
+        findQuery = { draft: false, title: new RegExp( query, 'i') };
 
     }
     
@@ -374,13 +374,13 @@ server.post('/search-blogs', (req, res) => {
 
     Blog.find(findQuery)
 
-    .populate("author", "personal_info.profile_img personal_info.username personal_info.fullname -_id ")
+    .populate("author", "personal_info.profile_img personal_info.username personal_info.fullname -_id")
 
     .sort( { "publishedAt": -1 } )
 
     .select("blog_id title des banner activity tags publishedAt -_id")
 
-    .skip( (page-1) * maxLimit)
+    .skip( (page - 1) * maxLimit)
 
     .limit(maxLimit)
 
@@ -396,13 +396,23 @@ server.post('/search-blogs', (req, res) => {
 
 server.post('/search-blogs-count', (req, res) => {
 
-    let { tag } = req.body;
+    let { tag, query } = req.body;
 
-    let findQuery = { tags : tag, draft : false};
+    let findQuery;
+
+    if(tag){
+
+        findQuery = { tags: tag, draft: false };
+
+   }else if(query){
+
+       findQuery = { draft: false, title: new RegExp( query, 'i') };
+
+   }
 
     Blog.countDocuments(findQuery)
     .then( count => {
-        return res.status(200).json( {totalDocs : count } ) 
+        return res.status(200).json( { totalDocs : count } ) 
     })
     .catch( err => {
 
@@ -413,6 +423,21 @@ server.post('/search-blogs-count', (req, res) => {
     })
 })
 
+server.post("/search-users", (req, res) => {
+
+    let  { query } = req.body;
+
+    User.find( {"personal_info.username": new RegExp ( query, i ) } )
+    .limit( 50 )
+    .select( "personal_info.fullname personal_info.username personal_info.profile_img - _id")
+    .then( user => {
+        return res.status(200).json( {user})
+    })
+    .catch(err => {
+        return res.status(500).json( {error: err.message})
+    })
+
+})
 
 server.post('/create-blog', verifyJWT , (req, res) => {
 
