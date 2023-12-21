@@ -298,7 +298,7 @@ server.post('/latest-blogs', (req, res) =>{
 
     Blog.find( { draft: false} )
 
-    .populate("author", "personal_info.profile_img personal_info.username personal_info.fullname -_id ")
+    .populate("author", "personal_info.profile_img personal_info.username personal_info.fullname -_id")
 
     .sort( { "publishedAt": -1 } )
     
@@ -355,7 +355,7 @@ server.get('/trending-blogs', (req, res) => {
 
 server.post('/search-blogs', (req, res) => {
 
-    let { tag, query, page } = req.body;
+    let { tag, query, author, page } = req.body;
 
     let findQuery;
     
@@ -367,6 +367,8 @@ server.post('/search-blogs', (req, res) => {
 
         findQuery = { draft: false, title: new RegExp( query, 'i') };
 
+    }else if(author){
+        findQuery = { author, draft: false };
     }
     
 
@@ -376,7 +378,7 @@ server.post('/search-blogs', (req, res) => {
 
     .populate("author", "personal_info.profile_img personal_info.username personal_info.fullname -_id")
 
-    .sort( { "publishedAt": -1 } )
+    .sort( { "publishedAt" : -1 } )
 
     .select("blog_id title des banner activity tags publishedAt -_id")
 
@@ -388,7 +390,7 @@ server.post('/search-blogs', (req, res) => {
         return res.status(200).json( {blogs} )
     })
     .catch(err =>{
-        return res.status(500).json( {error :err.message} )
+        return res.status(500).json( {error : err.message} )
     } )
 
 });
@@ -396,7 +398,7 @@ server.post('/search-blogs', (req, res) => {
 
 server.post('/search-blogs-count', (req, res) => {
 
-    let { tag, query } = req.body;
+    let { tag, author, query } = req.body;
 
     let findQuery;
 
@@ -408,6 +410,8 @@ server.post('/search-blogs-count', (req, res) => {
 
        findQuery = { draft: false, title: new RegExp( query, 'i') };
 
+   }else if(author){
+    findQuery = { author, draft: false };
    }
 
     Blog.countDocuments(findQuery)
@@ -423,17 +427,33 @@ server.post('/search-blogs-count', (req, res) => {
     })
 })
 
-server.post("/search-users", (req, res) => {
+server.post("/search-users",(req, res) => {
 
     let  { query } = req.body;
 
-    User.find( {"personal_info.username": new RegExp ( query, i ) } )
+    User.find( {"personal_info.username": new RegExp(query, 'i') } )
     .limit( 50 )
-    .select( "personal_info.fullname personal_info.username personal_info.profile_img - _id")
-    .then( user => {
-        return res.status(200).json( {user})
+    .select( "personal_info.fullname personal_info.username personal_info.profile_img -_id")
+    .then(users => {
+        return res.status(200).json( {users})
     })
     .catch(err => {
+        return res.status(500).json( {error: err.message})
+    })
+
+})
+
+
+server.post("/get-profile",(req, res) => {
+    let {username} = req.body;
+
+    User.findOne( {"personal_info.username": new RegExp(username)})
+    .select("-personal_info.password -google_auth -updatedAt -blogs")
+    .then(user => {
+        return res.status(200).json(user)
+    })
+    .catch(err =>{
+        console.error(err);
         return res.status(500).json( {error: err.message})
     })
 
@@ -443,7 +463,7 @@ server.post('/create-blog', verifyJWT , (req, res) => {
 
     let authorId = req.user;
 
-    let { title ,des , banner, tags ,content, draft} = req.body;
+    let { title ,des , banner, tags, content, draft} = req.body;
 
     if(!title.length){
         return res.status(403).json({"error" : "You must provide a title to publish the blog"});
