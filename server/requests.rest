@@ -48,9 +48,17 @@
 # }
 
 
-POST http://localhost:3000/get-profile
+POST http://localhost:3000/get-blog
 Content-Type: application/json
 
 {
-    "username" : "akshayjames98"
+    "blog_id": "Does-our-vegetables-are-organic-DYxLomr3HmQz5228j1768"
 }
+
+
+# post http://localhost:3000/get-profile
+# Content-Type: application/json
+
+# {
+#     "username": "akshayjames98"
+# }
