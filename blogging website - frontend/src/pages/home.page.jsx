@@ -45,7 +45,9 @@ const HomePage = () => {
         })
     }
 
-    const fetchBlogByCategory = ({ page = 1 }) => {
+    const 
+    
+    fetchBlogByCategory = ({ page = 1 }) => {
 
         axios.post(import.meta.env.VITE_SERVER_DOMAIN + "/search-blogs" , { tag : pageState, page })
         .then( async ( { data } ) => {
