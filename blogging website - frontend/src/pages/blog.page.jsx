@@ -1,9 +1,10 @@
 import axios from "axios";
-import { useEffect, useState } from "react";
+import { createContext, useContext, useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import Loader from "../components/loader.component";
 import AnimationWrapper from "../common/page-animation";
 import { getDay } from "../common/date";
+import BlogInteraction from "../components/blog-interaction.component";
 
 export const blogStructure = {
     title: '',
@@ -15,6 +16,8 @@ export const blogStructure = {
     publishedAt: '',
 
 }
+
+export const BlogContext = createContext({ })
 
 const BlogPage = () => {
 
@@ -52,7 +55,8 @@ const BlogPage = () => {
             {
                loading ? <Loader /> 
                 :
-                <div className="max-w-[900px] center py-10 max-lg:px-[5vw]">
+                <BlogContext.Provider value={{blog, setBlog}}>
+                     <div className="max-w-[900px] center py-10 max-lg:px-[5vw]">
                     <img src={banner} className="aspect-video" />
                     <div className="mt-12"> 
                         <h2>{title}</h2>                       
@@ -71,9 +75,11 @@ const BlogPage = () => {
                             </div>
                            <p className="text-dark-grey opacity-75 max-sm:mt-6 max-sm:ml-12 max-sm:pl-5">Published on {getDay(publishedAt)}</p>
                         </div>
-                                       
+
+                           <BlogInteraction/>            
                 </div>
-            }
+                </BlogContext.Provider>
+            }       
 
        </AnimationWrapper>      
     )
