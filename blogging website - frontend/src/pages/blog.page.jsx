@@ -5,6 +5,7 @@ import Loader from "../components/loader.component";
 import AnimationWrapper from "../common/page-animation";
 import { getDay } from "../common/date";
 import BlogInteraction from "../components/blog-interaction.component";
+import BlogContent from "../components/blog-content.component";
 
 export const blogStructure = {
     title: '',
@@ -34,6 +35,8 @@ const BlogPage = () => {
     const fetchBlog = () => {
         axios.post(import.meta.env.VITE_SERVER_DOMAIN + "/get-blog", { blog_id })
         .then(({ data: { blog } }) => {
+
+
             setBlog(blog);
             setLoading(false);
         })
@@ -75,6 +78,20 @@ const BlogPage = () => {
                             </div>
                            <p className="text-dark-grey opacity-75 max-sm:mt-6 max-sm:ml-12 max-sm:pl-5">Published on {getDay(publishedAt)}</p>
                         </div>
+
+                                       
+                            <div className="my-12 font-gelasio blog-page-content">
+
+                                {
+                                    content[0].blocks.map((block, i) =>{
+                                        return <div key={1} className="my-4 md:my-8">
+                                            <BlogContent block={block} />
+                                        </div>
+                                    })
+                                }
+
+                            </div>
+
 
                            <BlogInteraction/>            
                 </div>
