@@ -16,6 +16,7 @@ import aws from "aws-sdk";
 import User from './Schema/User.js'
 import Blog from './Schema/Blog.js'
 import Notification from './Schema/Notification.js'
+import Comment from './Schema/Comment.js'
 
 
 const server = express();
@@ -592,7 +593,7 @@ server.post("/like-blog", verifyJWT, (req, res) => {
                 return res.status(200).json({ liked_by_user: true })
             })
         }else{
-            
+
            Notification.findOneAndDelete({user: user_id, type: "like", blog: _id}) 
            .then(data => {
                 res.status(200).json({ liked_by_user:false })
@@ -620,6 +621,28 @@ server.post("/isLiked-by-user", verifyJWT, (req,res) => {
     })
 })
 
+server.post("/add-comment", verifyJWT, (req,res) => {
+
+    let user_id = req.user;
+
+    let { _id, comment, blog_author } = req.body;
+
+    if(!comment.length){
+        return res.status(403).json({ error: 'write something to leave a comment'});
+    }
+
+    // Create a comment doc
+
+    let commentObj = new Comment({
+        blog_id: _id, blog_author, comment, commented_by: user_id
+    }
+)
+
+commentObj.save().then(commentFile => {
+
+})
+
+})
 server.listen(PORT,()=>{
 
     console.log('listening on port -> '  +  PORT);
