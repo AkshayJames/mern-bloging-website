@@ -6,6 +6,8 @@ import AnimationWrapper from "../common/page-animation";
 import { getDay } from "../common/date";
 import BlogInteraction from "../components/blog-interaction.component";
 import BlogContent from "../components/blog-content.component";
+import CommentsComponent from "../components/comments.component";
+import CommentsContainer from "../components/comments.component";
 
 export const blogStructure = {
     title: '',
@@ -26,11 +28,11 @@ const BlogPage = () => {
     let { blog_id } = useParams()
 
     const [ blog, setBlog ] = useState(blogStructure);
-
     const [ loading, setLoading ] = useState(true);
-
     const [islikeByUser, setLikedByUser ] = useState(false);
-
+    const [ commentsWrapper, setCommentsWrapper ] = useState(true);
+    const [ totalParentCommentsLoaded, setTotalParentCommentsLoaded ] = useState(0);    
+    
     let { title, content, banner, author: { personal_info: { fullname, username: author_username, profile_img } }, publishedAt } = blog;
 
 
@@ -50,9 +52,18 @@ const BlogPage = () => {
 
     useEffect(() => {
 
+        resetStates();
+
         fetchBlog();
 
     }, [])
+
+    const resetStates = () => {
+
+        setTotalParentCommentsLoaded(0);
+        setCommentsWrapper(false);
+
+    }
 
     return (
        
@@ -60,7 +71,10 @@ const BlogPage = () => {
             {
                loading ? <Loader /> 
                 :
-                <BlogContext.Provider value = {{blog, setBlog, islikeByUser, setLikedByUser}}>
+                <BlogContext.Provider value = {{blog, setBlog, islikeByUser, setLikedByUser, setCommentsWrapper,setTotalParentCommentsLoaded ,commentsWrapper, totalParentCommentsLoaded }}>
+                    
+                    <CommentsContainer /> 
+
                      <div className="max-w-[900px] center py-10 max-lg:px-[5vw]">
                     <img src={banner} className="aspect-video" />
                     <div className="mt-12"> 
