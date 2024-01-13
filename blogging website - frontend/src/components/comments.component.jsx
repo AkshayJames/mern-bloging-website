@@ -4,7 +4,7 @@ import CommentField from "./comment-field.component";
 
 const CommentsContainer  = () => {
 
-    let { commentsWrapper, setCommentsWrapper, blog: { title, author:{personal_info:{fullname,username: author_username, profile_img}}}} = useContext(BlogContext)
+    let { commentsWrapper, setCommentsWrapper, blog: { title, author:{personal_info:{fullname,username: author_username }}}} = useContext(BlogContext)
 
 
     return (
@@ -12,7 +12,7 @@ const CommentsContainer  = () => {
 
         <div className="relative">
             <h1 className="text-xl font-medium">Comments</h1>
-            <p className="text-lg mt-2 w-[70%] text-dark-grey line-clamp-1">{ title}</p>
+            <p className="text-lg mt-2 w-[70%] text-dark-grey line-clamp-1">{ title }</p>
             <p>{fullname} username: {author_username} </p>
            
 
