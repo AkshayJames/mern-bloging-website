@@ -41,7 +41,7 @@ const BlogPage = () => {
         
         .then( async ({ data: { blog } }) => {
 
-            blog.comments = await fetchComments( {blog_id: blog_id, setParentCommentCountFun: setTotalParentCommentsLoaded} )
+            blog.comments = await fetchComments( {blog_id: blog._id, setParentCommentCountFun: setTotalParentCommentsLoaded} )
 
             setBlog(blog);
             setLoading(false);
@@ -103,7 +103,7 @@ const BlogPage = () => {
                                 {
                                     content[0].blocks.map((block, i) =>{
                                         return <div key={1} className="my-4 md:my-8">
-                                            <BlogContent block={block} />
+                                            <BlogContent block= { block } />
                                         </div>
                                     })
                                 }

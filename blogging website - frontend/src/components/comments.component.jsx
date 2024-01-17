@@ -16,11 +16,13 @@ export const fetchComments = async ( { skip = 0, blog_id, setParentCommentCountF
         setParentCommentCountFun(preVal => preVal + data.length)
 
         if(comment_array == null) {
-            res = { result: data }
+            res = { results: data }
         } else {
-            res = { result: [ ...comment_array, ... data ] }
+            res = { results: [ ...comment_array, ... data ] }
         }
     })
+
+    return res;
 
 }
 

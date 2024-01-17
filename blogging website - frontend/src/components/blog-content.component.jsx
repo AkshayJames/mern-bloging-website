@@ -7,6 +7,7 @@ const BlogContent = ({ block }) => {
         return <p dangerouslySetInnerHTML={{__html: data.text}}></p>
     }
     else {
+        
         ""
     }
 }
